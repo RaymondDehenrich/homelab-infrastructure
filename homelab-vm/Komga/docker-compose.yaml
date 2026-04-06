@@ -1,0 +1,28 @@
+services:
+  komga:
+    image: gotson/komga:latest
+    container_name: komga
+    volumes:
+      - type: bind
+        source: ${KOMGA_CONFIG}
+        target: /config
+      - type: bind
+        source: "${KOMGA_MOUNT}/Light Novel"
+        target: /mnt/Novel
+      - type: bind
+        source: ${KOMGA_MOUNT}/Manga
+        target: /mnt/Manga
+    ports:
+      - "8809:8809"
+    user: "1000:1000"
+    cpus: "3.0"
+    mem_limit: 4g
+    environment:
+      - TZ=Asia/Jakarta
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8809"] 
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

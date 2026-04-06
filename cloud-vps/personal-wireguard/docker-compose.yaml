@@ -1,0 +1,19 @@
+services:
+  # 2. WireGuard Private - Host Mode
+  wireguard-private:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard-private
+    ports:
+      - "51821:51821/udp"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - INTERNAL_CONTROL=false
+      - KILLSWITCH=false
+    volumes:
+      - /root/private-wireguard/config:/config
+      - /lib/modules:/lib/modules
+    restart: unless-stopped

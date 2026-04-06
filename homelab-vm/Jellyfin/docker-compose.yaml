@@ -1,0 +1,30 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    user: "1000:1000"
+    # Resource Limit
+    cpus: "3.0"
+    mem_limit: 4g
+    #GPU Passthrough
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+    # Volume Mappings
+    volumes:
+      - ${JELLYFIN_PATH}/config:/config
+      - ${JELLYFIN_PATH}/cache:/cache
+      - ${JELLYFIN_MOUNT}:/media 
+
+    ports:
+      - "8808:8808"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8808/health"] 
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

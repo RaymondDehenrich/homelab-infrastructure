@@ -1,0 +1,22 @@
+[Unit]
+Description=Komga Docker Compose Service
+# Ensure the network is ready
+After=network-online.target
+# Ensure the NFS mount is READY before trying to start the service
+After=mnt-novel_manga.mount
+Requires=mnt-novel_manga.mount
+
+[Service]
+WorkingDirectory=/home/<user>/docker/Komga
+
+User=<user>
+
+# Commands to manage the stack
+ExecStart=docker compose up
+ExecStop=docker compose down
+
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+services:
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard-vps
+    ports:
+      - "51820:51820/udp"
+      - "8808:8808"
+      - "8809:8809"
+      - "8812:8812"
+      - "25565:25565"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - INTERNAL_CONTROL=false
+      - KILLSWITCH=false
+    volumes:
+      - /root/wireguard/config:/config
+      - /lib/modules:/lib/modules
+    restart: unless-stopped

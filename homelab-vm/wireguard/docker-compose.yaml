@@ -1,0 +1,23 @@
+services:
+  wireguard:
+    image: linuxserver/wireguard
+    container_name: wireguard
+    privileged: true
+    cpus: "3.0"
+    mem_limit: 4g
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    volumes:
+      - /lib/modules:/lib/modules
+      - ${WIREGUARD_PATH}config:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Jakarta
+      - SERVERURL=domain.example.here
+      - SERVERPORT=51820
+      - PEERS=1
+      - WG_IWL_ROUTING=0
+    restart: unless-stopped

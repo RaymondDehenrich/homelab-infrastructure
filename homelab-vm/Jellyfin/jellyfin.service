@@ -1,0 +1,24 @@
+[Unit]
+Description=Jellyfin Docker Compose Service
+# Ensure the network is ready
+After=network-online.target 
+# Ensure the NFS mount is READY before trying to start the service
+After=mnt-jellyfin.mount
+Requires=mnt-jellyfin.mount
+
+[Service]
+WorkingDirectory=/home/<user>/docker/JellyFin
+
+
+User=<user>
+
+
+ExecStart=docker compose up
+ExecStop=docker compose down
+
+
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
