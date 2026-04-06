@@ -1,0 +1,12 @@
+[Unit]
+Description=Turbo Vault Backup NFS Mount
+After=network-online.target
+Wants=network-online.target
+
+[Mount]
+What=192.168.0.100:/mnt/TurboVault/reVault/backup
+Type=nfs
+Options=nolock,noatime,async,soft,timeo=30,retry=5
+
+[Install]
+WantedBy=multi-user.target

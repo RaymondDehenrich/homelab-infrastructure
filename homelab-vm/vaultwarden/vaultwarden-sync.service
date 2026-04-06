@@ -1,0 +1,14 @@
+[Unit]
+Description=Vaultwarden Homelab Sync
+
+After=network-online.target mnt-turbo_backup.mount mnt-vault_backup.mount
+Requires=mnt-turbo_backup.mount mnt-vault_backup.mount
+
+[Service]
+Type=oneshot
+User=<user>
+
+ExecStart=/bin/bash /home/<user>/docker/vaultwarden/sync_vault.sh
+
+[Install]
+WantedBy=multi-user.target
