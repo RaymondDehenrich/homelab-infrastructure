@@ -30,31 +30,37 @@ graph TD
     end
 
     subgraph Home_Lab [Homelab - TrueNAS]
-        WG_C[WireGuard]
-        JF[Jellyfin]
-        KG[Komga]
-        MC[Game Server]
-        Other[Other Service]
-        Other2[Internal Service]
+        subgraph VM [VM - Ubuntu]
+            WG_C[WireGuard]
+            JF[Jellyfin]
+            KG[Komga]
+            MC[Game Server]
+            Other[Other Service]
+            Other2[Internal Service]
+        end
         NAS[(TrueNAS ZFS Storage)]
     end
 
     User2((Internal User))
 
     %% Connections
-    User --> CF
-    CF --> NPM
-    NPM -.-> VW
-    NPM ==>|WireGuard Tunnel| WG_C
+    User <--> CF
+    CF <--> NPM
+    NPM <-.-> VW
+    NPM <--> WG_S
+    WG_S <==>|WireGuard Tunnel| WG_C
     
-    WG_C --> JF
-    WG_C --> KG
-    WG_C --> MC
-    WG_C --> Other
+    WG_C <--> JF
+    WG_C <--> KG
+    WG_C <--> MC
+    WG_C <--> Other
     
-    JF -.-> NAS
-    KG -.-> NAS
-    User2-->Other2
+    JF <-.-> NAS
+    KG <-.-> NAS
+    MC <-.-> NAS
+    Other <-.-> NAS
+    Other2 <-.-> NAS
+    User2<-->Other2
 ```
 
 * **DNS & Routing:** Cloudflare DNS records are utilized to manage subdomains and route traffic to the public-facing VPS.
