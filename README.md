@@ -17,6 +17,46 @@ I have incrementally upgraded the infrastructure to support heavier virtualizati
 ## Architecture & Networking
 To bypass local ISP limitations (No port forward/Limited port) and ensure secure remote access, the architecture utilizes a hybrid approach by bridging a cloud VPS with the local TrueNAS host using Wireguard Tunnel.
 
+```mermaid
+graph TD
+    %% Nodes Definition
+    User((External User))
+    CF[Cloudflare DNS]
+    
+    subgraph Cloud_VPS [VPS - Public Gateway]
+        NPM[Nginx Proxy Manager]
+        VW[Vaultwarden]
+        WG_S[WireGuard]
+    end
+
+    subgraph Home_Lab [Homelab - TrueNAS]
+        WG_C[WireGuard]
+        JF[Jellyfin]
+        KG[Komga]
+        MC[Game Server]
+        Other[Other Service]
+        Other2[Internal Service]
+        NAS[(TrueNAS ZFS Storage)]
+    end
+
+    User2((Internal User))
+
+    %% Connections
+    User --> CF
+    CF --> NPM
+    NPM -.-> VW
+    NPM ==>|WireGuard Tunnel| WG_C
+    
+    WG_C --> JF
+    WG_C --> KG
+    WG_C --> MC
+    WG_C --> Other
+    
+    JF -.-> NAS
+    KG -.-> NAS
+    User2-->Other2
+```
+
 * **DNS & Routing:** Cloudflare DNS records are utilized to manage subdomains and route traffic to the public-facing VPS.
 * **Cloud Gateway (VPS):** A basic VPS acts as the ingress point. It hosts **Nginx Proxy Manager**, which handles all reverse proxy routing and HTTPS SSL certificate generation before traffic ever reaches the local network.
 * **VPN Tunneling:** WireGuard is deployed to establish a persistent, secure tunnel between the VPS and the local Homelab VM with only specific port passed through. All web and game server traffic is routed through this tunnel.
